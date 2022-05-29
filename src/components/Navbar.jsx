@@ -10,7 +10,25 @@ import { Cart, Chat, Notification, UserProfile } from ".";
 import { useStateContext } from "../contexts/ContextProvider";
 
 function Navbar() {
-  const { activeMenu, setActiveMenu, isClicked, setIsClicked, handleClick } = useStateContext();
+  const { activeMenu, setActiveMenu, isClicked, setIsClicked, handleClick, screenSize, setScreenSize } = useStateContext();
+
+  useEffect(()=>{
+    const handleResize = ()=> setScreenSize(window.innerWidth)
+
+    window.addEventListener('resize', handleResize)
+
+    handleResize()
+
+    return()=> window.removeEventListener('resize', handleResize)
+  },[])
+
+  useEffect(()=>{
+    if(screenSize <= 900){
+      setActiveMenu(false)
+    } else{
+      setActiveMenu(true)
+    }
+  },[screenSize])
 
 
   const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
@@ -24,9 +42,9 @@ function Navbar() {
         <span
           style={{ background: dotColor }}
           className="absolute inline-flex rounded-full h-2 w-2 right-2 top-2"
-        >
+        />
           {icon}
-        </span>
+        
       </button>
     </TooltipComponent>
   );
